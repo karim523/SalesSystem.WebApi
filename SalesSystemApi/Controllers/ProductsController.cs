@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SalesSystem.Application.Products;
 using SalesSystem.Application.Products.Dtos;
-using SalesSystem.Domain.Entities;
+using SalesSystem.Domain.ErrorModels;
+using System.Net;
 
 namespace SalesSystemApi.Controllers
 {

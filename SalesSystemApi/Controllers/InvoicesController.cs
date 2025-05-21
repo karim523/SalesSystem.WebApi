@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SalesSystem.Application.Invoices;
 using SalesSystem.Application.Invoices.Dtos;
+using SalesSystem.Domain.ErrorModels;
+using System.Net;
 
 namespace SalesSystemApi.Controllers
 {

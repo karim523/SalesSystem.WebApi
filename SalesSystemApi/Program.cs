@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SalesSystem.Application.Invoices;
 using SalesSystem.Application.Products;
@@ -5,6 +6,8 @@ using SalesSystem.Domain;
 using SalesSystem.Domain.IRepositories;
 using SalesSystem.Infrastructure;
 using SalesSystem.Infrastructure.Repositories;
+using SalesSystemApi.Factories;
+using SalesSystemApi.Middlewares;
 using System;
 
 namespace SalesSystemApi
@@ -28,6 +31,10 @@ namespace SalesSystemApi
             builder.Services.AddScoped<IInvoiceService, InvoiceService>();
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
+            builder.Services.Configure<ApiBehaviorOptions>(options =>
+            {
+                options.InvalidModelStateResponseFactory = ApiResponseFactory.CustomValidationErrorResponse;
+            });
 
             builder.Services.AddCors(options =>
             {
@@ -49,12 +56,13 @@ namespace SalesSystemApi
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+            app.UseMiddleware<GlobalErrorHandlingMiddleware>();
 
             app.UseHttpsRedirection();
 
-            app.UseCors("AllowAngularApp");
-
             app.UseAuthorization();
+
+            app.UseCors("AllowAngularApp");
 
             app.MapControllers();
 
