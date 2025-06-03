@@ -17,33 +17,32 @@ namespace SalesSystemApi.Controllers
     [ProducesResponseType(typeof(ValidationErrorResponse), (int)HttpStatusCode.BadRequest)]
     public class InvoicesController(IMediator _mediator) : ControllerBase
     {
-        [HttpGet]
+        [HttpGet("all")]
         public async Task<ActionResult> GetAll()
         {
             var result = await _mediator.Send(new GetAllInvoicesQuery());
             return Ok(result);
         }
 
-        [HttpGet("{id:int}")]
+        [HttpGet("details/{id:int}")]
         public async Task<ActionResult> GetById(int id)
         {
             var result = await _mediator.Send(new GetInvoiceByIdQuery(id));
             return result is null ? NotFound() : Ok(result);
         }
 
-        [HttpPost]
+        [HttpPost("create")]
         public async Task<ActionResult> Create([FromBody] CreateInvoiceDto dto)
         {
             var result = await _mediator.Send(new CreateInvoiceCommand(dto));
-            return CreatedAtAction(nameof(GetById), new { id = result.InvoiceId }, result);
+            return Ok(result);
         }
 
-        [HttpGet("search")]
+        [HttpGet("search-by-customer")]
         public async Task<ActionResult> Search([FromQuery] string query)
         {
             var result = await _mediator.Send(new SearchInvoicesQuery(query));
             return Ok(result);
         }
-
     }
 }

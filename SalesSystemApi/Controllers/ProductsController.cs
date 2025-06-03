@@ -20,50 +20,50 @@ namespace SalesSystemApi.Controllers
     [ProducesResponseType(typeof(ValidationErrorResponse), (int)HttpStatusCode.BadRequest)]
     public class ProductsController(IMediator _mediator) : ControllerBase
     {
-        [HttpGet]
-        public async Task<IActionResult> GetAll()
+        [HttpGet("all")]
+        public async Task<ActionResult> GetAll()
         {
             var result = await _mediator.Send(new GetAllProductsQuery());
             return Ok(result);
         }
 
-        [HttpGet("{id:int}")]
-        public async Task<IActionResult> GetById(int id)
+        [HttpGet("details/{id:int}")]
+        public async Task<ActionResult> GetById(int id)
         {
             var result = await _mediator.Send(new GetProductByIdQuery(id));
             return result is null ? NotFound() : Ok(result);
         }
 
-        [HttpGet("search")]
-        public async Task<IActionResult> Search([FromQuery] string query)
+        [HttpGet("search-by-name")]
+        public async Task<ActionResult> Search([FromQuery] string query)
         {
             var result = await _mediator.Send(new SearchProductsQuery(query));
             return Ok(result);
         }
 
         [HttpGet("low-stock")]
-        public async Task<IActionResult> GetLowStock()
+        public async Task<ActionResult> GetLowStock()
         {
             var result = await _mediator.Send(new GetLowStockProductsQuery());
             return Ok(result);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Create([FromBody] CreateProductDto dto)
+        [HttpPost("create")]
+        public async Task<ActionResult> Create([FromBody] CreateProductDto dto)
         {
             var result = await _mediator.Send(new CreateProductCommand(dto));
             return Ok(result);
         }
 
-        [HttpPut("{id:int}")]
-        public async Task<IActionResult> Update(int id, [FromBody] UpdateProductDto dto)
+        [HttpPut("update/{id:int}")]
+        public async Task<ActionResult> Update(int id, [FromBody] UpdateProductDto dto)
         {
             var result = await _mediator.Send(new UpdateProductCommand(id, dto));
             return result is null ? NotFound() : Ok(result);
         }
 
-        [HttpDelete("{id:int}")]
-        public async Task<IActionResult> Delete(int id)
+        [HttpDelete("delete/{id:int}")]
+        public async Task<ActionResult> Delete(int id)
         {
             var result = await _mediator.Send(new DeleteProductCommand(id));
             return result ? NoContent() : NotFound();
