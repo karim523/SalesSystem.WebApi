@@ -1,14 +1,12 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using SalesSystem.Application.Invoices;
-using SalesSystem.Application.Products;
+using SalesSystem.Application.Products.Commands.CreateProduct;
 using SalesSystem.Domain;
 using SalesSystem.Domain.IRepositories;
 using SalesSystem.Infrastructure;
 using SalesSystem.Infrastructure.Repositories;
 using SalesSystemApi.Factories;
 using SalesSystemApi.Middlewares;
-using System;
 
 namespace SalesSystemApi
 {
@@ -25,10 +23,11 @@ namespace SalesSystemApi
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             }, ServiceLifetime.Scoped);
 
-            builder.Services.AddScoped<IProductServices, ProductServices>();
+            builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(CreateProductCommand).Assembly));
+
+
             builder.Services.AddScoped<IProductRepository, ProductRepository>();
             builder.Services.AddScoped<IInvoiceRepository, InvoiceRepository>();
-            builder.Services.AddScoped<IInvoiceService, InvoiceService>();
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             builder.Services.Configure<ApiBehaviorOptions>(options =>

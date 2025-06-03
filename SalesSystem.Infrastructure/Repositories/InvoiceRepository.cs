@@ -7,6 +7,7 @@ namespace SalesSystem.Infrastructure.Repositories
         public async Task<IEnumerable<Invoice>> GetAllAsync()
         {
             return await _context.Invoices
+                .AsNoTracking()
                 .Include(i => i.Items)
                 .ToListAsync();
         }
@@ -14,6 +15,7 @@ namespace SalesSystem.Infrastructure.Repositories
         public async Task<Invoice?> GetByIdAsync(int id)
         {
             return await _context.Invoices
+                .AsNoTracking()
                 .Include(i => i.Items)
                 .FirstOrDefaultAsync(i => i.Id == id);
         }
@@ -21,8 +23,9 @@ namespace SalesSystem.Infrastructure.Repositories
         public async Task<IEnumerable<Invoice>> SearchAsync(string query)
         {
             return await _context.Invoices
+                .AsNoTracking()
                 .Where(i => i.InvoiceNumber.ToLower().Contains(query.ToLower()) ||
-                (i.CustomerName != null && i.CustomerName.ToLower().Contains(query.ToLower())))
+                (i.CustomerName != null && i.CustomerName.ToLower().Contains(query.Trim().ToLower())))
                 .Include(i => i.Items)
                 .ToListAsync();
         }

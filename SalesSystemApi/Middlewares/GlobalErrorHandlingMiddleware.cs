@@ -29,7 +29,6 @@ namespace SalesSystemApi.Middlewares
                 _logger.LogError($"Something went wrong : {ex}");
                 await HandleException(httpContext, ex);
 
-                throw;
             }
         }
 

@@ -15,10 +15,10 @@ namespace SalesSystem.Infrastructure.Repositories
         }
 
         public async Task<IEnumerable<Product>> GetAllProductsAsync() =>
-            await _context.Products.ToListAsync(); 
+            await _context.Products.AsNoTracking().ToListAsync(); 
 
         public async Task<List<Product>> GetLowStockProductsAsync() =>
-            await _context.Products
+            await _context.Products.AsNoTracking()
                 .Where(p => p.QuantityAvailable < p.ReorderThreshold)
                 .ToListAsync();
 
@@ -27,7 +27,9 @@ namespace SalesSystem.Infrastructure.Repositories
 
         public async Task<IEnumerable<Product>> SearchAsync(string query) =>
             await _context.Products
-                .Where(p => p.Name.ToLower().Contains(query.ToLower()) || p.Code.Contains(query))
+                .AsNoTracking()
+                .Where(p => p.Name.ToLower().Contains(query.ToLower().Trim()) ||
+                       p.Code.ToLower().Contains(query.ToLower().Trim()))
                 .ToListAsync();
 
         public Task UpdateProductAsync(Product product)
